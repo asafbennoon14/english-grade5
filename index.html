@@ -1,216 +1,136 @@
-<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>English Test Prep – כיתה ה</title>
-<style>
-body{font-family:Arial,Helvetica,sans-serif;background:#fff8f0;margin:0;color:#222}
-header{background:linear-gradient(90deg,#f76707,#e64980);color:#fff;padding:16px;text-align:center}
-header h1{margin:4px 0;font-size:24px}
-nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:8px;background:#fff;position:sticky;top:0;box-shadow:0 2px 6px #0001;z-index:5}
-nav button{border:0;padding:8px 12px;border-radius:20px;background:#ffe8cc;cursor:pointer;font-size:14px}
-nav button.on{background:#f76707;color:#fff}
-main{max-width:860px;margin:auto;padding:12px}
-.sec{display:none}.sec.on{display:block}
-.card{background:#fff;border-radius:14px;padding:14px;margin:12px 0;box-shadow:0 1px 4px #0002}
-.en{direction:ltr;text-align:left}
-.q{border-left:5px solid #ced4da}.q.ok{border-color:#2f9e44;background:#ebfbee}.q.bad{border-color:#e03131;background:#fff5f5}
-input[type=text]{min-width:110px;max-width:100%;padding:6px;font-size:17px;border:1px solid #aaa;border-radius:6px;direction:ltr}
-input.wide{width:95%}
-label.opt{display:inline-block;margin:4px 6px;padding:5px 10px;border:1px solid #ddd;border-radius:16px;cursor:pointer;background:#fafafa}
-.exp{display:none;margin-top:8px;padding:8px;border-radius:8px;background:#fff9db;direction:rtl;text-align:right}
-.btn{background:#2f9e44;color:#fff;border:0;padding:12px 22px;font-size:17px;border-radius:10px;cursor:pointer;margin:6px}
-.btn.gray{background:#868e96}
-.res{font-size:18px;font-weight:bold}
-.tip{background:#e7f5ff;border-radius:8px;padding:10px;margin:8px 0}
-table{border-collapse:collapse;margin:8px auto}td,th{border:1px solid #ddd;padding:6px 10px;text-align:center}
-.say{border:0;background:#fff0f6;border-radius:50%;cursor:pointer;font-size:16px;padding:3px 6px}
-.story{font-size:18px;line-height:1.7;background:#f8f9fa;padding:12px;border-radius:10px}
-.flash{display:inline-block;margin:5px;padding:10px 14px;border-radius:12px;background:#fff3bf;cursor:pointer;min-width:100px;text-align:center;font-size:17px}
-.flash.f{background:#d3f9d8}
-</style></head><body>
-<header><h1>🇬🇧 English Test Prep – כיתה ה'</h1><div>מבחן 9.11 • Unit 1 Vocabulary • Pronouns • am/is/are • have/has • Present Simple • Plurals • Reading • Writing</div></header>
-<nav id="nav"></nav><main id="main"></main>
-<script>
-const say=t=>{try{const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
-const S=t=>`<button type="button" class="say" onclick="say('${t.replace(/'/g,"\\'")}')">🔊</button>`;
-// ---------- אוצר מילים (מתוך דף התרגול של יחידה 1) ----------
-const VOC=[['gold','זהב'],['coin','מטבע'],['imagine','לדמיין'],['famous','מפורסם'],['movie star','כוכב קולנוע'],['news','חדשות'],['treasure','אוצר'],['gift','מתנה'],['building','בניין'],['capital','עיר בירה'],['real','אמיתי'],['expensive','יקר'],['stone','אבן'],['visit','לבקר'],['decorate','לקשט'],['stay','לשהות / להתארח'],['reporter','כתב / כתבת'],['trip','טיול'],['receive','לקבל'],['city','עיר']];
-const T=['אוצר מילים','כינויי גוף','am / is / are','have / has','Present Simple','רבים ויחיד','הבנת הנקרא','כתיבה'];
-const PRON=['I','you','he','she','it','we','they'];
-// t: mc / txt ; a = תשובה או מערך תשובות אפשריות
-const PR=[
-[ // 0 vocab
-{t:'mc',q:'My grandfather gave me five <b>gold / fun</b> coins.',o:['gold','fun'],a:'gold',e:'gold = זהב. מטבעות זהב.'},
-{t:'mc',q:'I like to <b>imagine / play</b> that I am a famous movie star.',o:['imagine','play'],a:'imagine',e:'imagine = לדמיין.'},
-{t:'mc',q:'Every evening my father watches the <b>news / treasure</b> on TV.',o:['news','treasure'],a:'news',e:'news = חדשות – רואים בטלוויזיה.'},
-{t:'mc',q:'On my birthday I received many <b>gifts / buildings</b>.',o:['gifts','buildings'],a:'gifts',e:'gifts = מתנות. ביום הולדת מקבלים מתנות.'},
-{t:'mc',q:'The <b>capital / real</b> city of France is Paris.',o:['capital','real'],a:'capital',e:'capital city = עיר בירה.'},
-{t:'mc',q:'מה פירוש המילה <b>treasure</b>?',o:['אוצר','מתנה','בניין','חדשות'],a:'אוצר',e:'treasure = אוצר.'},
-{t:'mc',q:'מה פירוש המילה <b>expensive</b>?',o:['זול','יקר','מפורסם','אמיתי'],a:'יקר',e:'expensive = יקר.'},
-{t:'mc',q:'מה פירוש המילה <b>decorate</b>?',o:['לבקר','לקשט','לדמיין','לקבל'],a:'לקשט',e:'decorate = לקשט.'},
-{t:'mc',q:'A news <b>___</b> works on TV and tells us the news.',o:['reporter','coin','stone','gift'],a:'reporter',e:'reporter = כתב.'},
-{t:'mc',q:'We are going to <b>___</b> Grandma next summer.',o:['visit','decorate','imagine','watch'],a:'visit',e:'visit = לבקר.'},
-{t:'mc',q:'A diamond is an expensive <b>___</b>.',o:['stone','city','trip','news'],a:'stone',e:'diamond (יהלום) הוא אבן יקרה = expensive stone.'},
-{t:'mc',q:'Adam is staying at a <b>___</b> in Nahariya.',o:['hotel','coin','gift','reporter'],a:'hotel',e:'stay at a hotel = לשהות במלון.'}],
-[ // 1 pronouns
-{t:'mc',q:'<b>Dan</b> is my friend. → ___ is my friend.',o:PRON,a:'he',e:'בן אחד = he.'},
-{t:'mc',q:'<b>Maya</b> likes cats. → ___ likes cats.',o:PRON,a:'she',e:'בת אחת = she.'},
-{t:'mc',q:'<b>The dog</b> is big. → ___ is big.',o:PRON,a:'it',e:'חיה או חפץ אחד = it.'},
-{t:'mc',q:'<b>Tom and Ben</b> play football. → ___ play football.',o:PRON,a:'they',e:'הם / הן (שניים או יותר, בלי "אני") = they.'},
-{t:'mc',q:'<b>My sister and I</b> are happy. → ___ are happy.',o:PRON,a:'we',e:'"אני ו..." = אנחנו = we.'},
-{t:'mc',q:'<b>The books</b> are on the table. → ___ are on the table.',o:PRON,a:'they',e:'כמה חפצים = they.'},
-{t:'mc',q:'<b>Mom</b> is a teacher. → ___ is a teacher.',o:PRON,a:'she',e:'אמא = she.'},
-{t:'mc',q:'<b>The bag</b> is red. → ___ is red.',o:PRON,a:'it',e:'חפץ אחד = it.'},
-{t:'mc',q:'מה התרגום של <b>"אתם"</b>?',o:PRON,a:'you',e:'you = אתה / את / אתם / אתן.'},
-{t:'mc',q:'<b>Grandpa</b> reads the news. → ___ reads the news.',o:PRON,a:'he',e:'סבא = he.'}],
-[ // 2 am is are
-{t:'mc',q:'I ___ ten years old.',o:['am','is','are'],a:'am',e:'I → am (תמיד!).'},
-{t:'mc',q:'She ___ my sister.',o:['am','is','are'],a:'is',e:'he / she / it → is.'},
-{t:'mc',q:'We ___ in class 5.',o:['am','is','are'],a:'are',e:'we / you / they → are.'},
-{t:'mc',q:'The cat ___ black.',o:['am','is','are'],a:'is',e:'The cat = it → is.'},
-{t:'mc',q:'Dan and Tom ___ friends.',o:['am','is','are'],a:'are',e:'Dan and Tom = they → are.'},
-{t:'mc',q:'You ___ a good student.',o:['am','is','are'],a:'are',e:'you → are.'},
-{t:'mc',q:'Paris ___ the capital of France.',o:['am','is','are'],a:'is',e:'Paris = it → is.'},
-{t:'mc',q:'The gifts ___ on the table.',o:['am','is','are'],a:'are',e:'gifts (רבים) = they → are.'},
-{t:'txt',q:'השלימי: It ___ a famous building.',a:['is'],e:'it → is.'},
-{t:'txt',q:'השלימי: They ___ at the hotel.',a:['are'],e:'they → are.'},
-{t:'mc',q:'איזה משפט <b>נכון</b>?',o:['He are happy.','He is happy.','He am happy.'],a:'He is happy.',e:'he → is.'},
-{t:'mc',q:'שאלה: ___ you a movie star?',o:['Am','Is','Are'],a:'Are',e:'בשאלה מעבירים את am/is/are להתחלה: Are you...?'}],
-[ // 3 have has
-{t:'mc',q:'I ___ a dog.',o:['have','has'],a:'have',e:'I / you / we / they → have.'},
-{t:'mc',q:'She ___ a gold coin.',o:['have','has'],a:'has',e:'he / she / it → has.'},
-{t:'mc',q:'We ___ English today.',o:['have','has'],a:'have',e:'we → have.'},
-{t:'mc',q:'My father ___ a new car.',o:['have','has'],a:'has',e:'My father = he → has.'},
-{t:'mc',q:'The cat ___ a long tail.',o:['have','has'],a:'has',e:'The cat = it → has.'},
-{t:'mc',q:'Dan and Maya ___ many gifts.',o:['have','has'],a:'have',e:'Dan and Maya = they → have.'},
-{t:'txt',q:'השלימי: You ___ a nice room.',a:['have'],e:'you → have.'},
-{t:'txt',q:'השלימי: Tom ___ two sisters.',a:['has'],e:'Tom = he → has.'},
-{t:'mc',q:'איזה משפט <b>נכון</b>?',o:['It have four legs.','It has four legs.'],a:'It has four legs.',e:'it → has.'}],
-[ // 4 present simple
-{t:'mc',q:'She ___ to school every day.',o:['go','goes','gos'],a:'goes',e:'go מסתיים ב-o → מוסיפים es: goes.'},
-{t:'mc',q:'I ___ TV in the evening.',o:['watch','watches'],a:'watch',e:'עם I לא מוסיפים s.'},
-{t:'mc',q:'My father ___ TV every evening.',o:['watch','watchs','watches'],a:'watches',e:'מסתיים ב-ch → es: watches.'},
-{t:'mc',q:'The baby ___ a lot.',o:['crys','cries','cryes'],a:'cries',e:'עיצור + y → ies: cry → cries.'},
-{t:'mc',q:'He ___ football.',o:['plaies','plays','playes'],a:'plays',e:'תנועה (a) + y → רק s: plays.'},
-{t:'mc',q:'They ___ in Tel Aviv.',o:['live','lives'],a:'live',e:'they → בלי s.'},
-{t:'txt',q:'כתבי עם he: (read) → he ___',a:['reads'],e:'רגיל → s: reads.'},
-{t:'txt',q:'כתבי עם she: (fly) → she ___',a:['flies'],e:'עיצור + y → ies: flies.'},
-{t:'txt',q:'כתבי עם it: (fix) → it ___',a:['fixes'],e:'מסתיים ב-x → es.'},
-{t:'txt',q:'כתבי עם he: (wash) → he ___',a:['washes'],e:'מסתיים ב-sh → es.'},
-{t:'txt',q:'כתבי עם she: (study) → she ___',a:['studies'],e:'עיצור + y → ies.'},
-{t:'txt',q:'כתבי עם he: (do) → he ___',a:['does'],e:'do → does.'},
-{t:'mc',q:'Maya ___ her room for her birthday.',o:['decorate','decorates'],a:'decorates',e:'Maya = she → s.'}],
-[ // 5 plurals
-{t:'txt',q:'Plural: a woman → ___',a:['women'],e:'מילה חריגה: woman → women.'},
-{t:'txt',q:'Plural: a key → ___',a:['keys'],e:'תנועה + y → s.'},
-{t:'txt',q:'Plural: a leaf → ___',a:['leaves'],e:'f → ves.'},
-{t:'txt',q:'Plural: a match → ___',a:['matches'],e:'ch → es.'},
-{t:'txt',q:'Plural: a wife → ___',a:['wives'],e:'fe → ves.'},
-{t:'txt',q:'Plural: a lady → ___',a:['ladies'],e:'עיצור + y → ies.'},
-{t:'txt',q:'Plural: a sheep → ___',a:['sheep'],e:'חריג – לא משתנה!'},
-{t:'txt',q:'Plural: a potato → ___',a:['potatoes'],e:'potato / tomato → oes.'},
-{t:'txt',q:'Plural: a chief → ___',a:['chiefs'],e:'חריג: chief → chiefs (לא ves).'},
-{t:'txt',q:'Plural: a child → ___',a:['children'],e:'חריג.'},
-{t:'txt',q:'Plural: a tooth → ___',a:['teeth'],e:'חריג.'},
-{t:'txt',q:'Plural: a mouse → ___',a:['mice'],e:'חריג.'},
-{t:'txt',q:'Singular: babies → a ___',a:['baby','a baby'],e:'ies → y.'},
-{t:'txt',q:'Singular: feet → a ___',a:['foot','a foot'],e:'feet → foot.'},
-{t:'txt',q:'Singular: computers → a ___',a:['computer','a computer'],e:'מורידים s.'},
-{t:'txt',q:'Singular: geese → a ___',a:['goose','a goose'],e:'geese → goose.'}]];
-// ---------- הבנת הנקרא ----------
-const STORY=`My name is Noa. I am ten years old and I live in Haifa. I have a brother. His name is Ben. He is eight. Ben has a small dog. It is brown and it likes to play in the garden.<br><br>Every summer my family goes on a trip. This summer we are in Paris. Paris is the capital city of France. We are staying at a big hotel. Every morning my father watches the news on TV and my mother reads a book. Ben and I visit famous buildings. Yesterday Grandma gave me a gift – a gold coin! I imagine that it is a real treasure.`;
-const READ=[
-{t:'mc',q:'How old is Noa?',o:['eight','ten','twelve'],a:'ten',e:'"I am ten years old".'},
-{t:'mc',q:'Who has a dog?',o:['Noa','Ben','Grandma'],a:'Ben',e:'"Ben has a small dog".'},
-{t:'mc',q:'What color is the dog?',o:['black','white','brown'],a:'brown',e:'"It is brown".'},
-{t:'mc',q:'Where is the family this summer?',o:['in Haifa','in Paris','in London'],a:'in Paris',e:'"This summer we are in Paris".'},
-{t:'mc',q:'Where are they staying?',o:['at a hotel','at Grandma\'s house','in a tent'],a:'at a hotel',e:'"We are staying at a big hotel".'},
-{t:'mc',q:'What does the father do every morning?',o:['reads a book','watches the news','visits buildings'],a:'watches the news',e:'"my father watches the news on TV".'},
-{t:'mc',q:'What gift did Noa get?',o:['a gold coin','a book','a dog'],a:'a gold coin',e:'"a gold coin".'},
-{t:'mc',q:'True or False: Paris is the capital city of France.',o:['True','False'],a:'True',e:'כתוב בטקסט: Paris is the capital city of France.'},
-{t:'mc',q:'True or False: Ben is older than Noa.',o:['True','False'],a:'False',e:'Ben בן 8 ו-Noa בת 10, לכן Ben צעיר יותר.'},
-{t:'txt',q:'Who is Ben? Ben is Noa\'s ___ .',a:['brother'],e:'"I have a brother. His name is Ben".'}];
-// ---------- כתיבה ----------
-const WRITE=[
-{t:'txt',w:1,q:'סדרי את המילים למשפט: <b>is / she / happy</b>',a:['she is happy'],e:'She is happy.'},
-{t:'txt',w:1,q:'סדרי: <b>am / I / a / student</b>',a:['i am a student'],e:'I am a student.'},
-{t:'txt',w:1,q:'סדרי: <b>are / they / the / at / hotel</b>',a:['they are at the hotel'],e:'They are at the hotel.'},
-{t:'txt',w:1,q:'סדרי: <b>has / he / a / coin / gold</b>',a:['he has a gold coin'],e:'He has a gold coin.'},
-{t:'txt',w:1,q:'סדרי: <b>we / in / are / Paris</b>',a:['we are in paris'],e:'We are in Paris.'},
-{t:'txt',w:1,q:'תרגמי לאנגלית: <b>הוא מפורסם.</b>',a:['he is famous'],e:'He is famous.'},
-{t:'txt',w:1,q:'תרגמי לאנגלית: <b>אנחנו חברים.</b>',a:['we are friends'],e:'We are friends.'},
-{t:'txt',w:1,q:'תרגמי לאנגלית: <b>זה (it) גדול.</b>',a:['it is big'],e:'It is big.'},
-{t:'txt',w:1,q:'תקני את הטעות: <b>They is my friends.</b>',a:['they are my friends'],e:'they → are.'},
-{t:'txt',w:1,q:'תקני את הטעות: <b>She have a cat.</b>',a:['she has a cat'],e:'she → has.'}];
-// ---------- מבחן מסכם ----------
-const EX=[
-{k:0,t:'mc',q:'My mother likes to ___ the house for holidays.',o:['decorate','imagine','receive'],a:'decorate',e:'לקשט את הבית.'},
-{k:0,t:'mc',q:'What does <b>famous</b> mean?',o:['מפורסם','יקר','אמיתי'],a:'מפורסם',e:'famous = מפורסם.'},
-{k:0,t:'mc',q:'Jerusalem is the ___ city of Israel.',o:['capital','real','gold'],a:'capital',e:'עיר בירה.'},
-{k:0,t:'mc',q:'A diamond is very ___ .',o:['expensive','news','visit'],a:'expensive',e:'יקר.'},
-{k:1,t:'mc',q:'<b>My friends</b> are nice. → ___ are nice.',o:PRON,a:'they',e:'רבים → they.'},
-{k:1,t:'mc',q:'<b>The coin</b> is gold. → ___ is gold.',o:PRON,a:'it',e:'חפץ → it.'},
-{k:1,t:'mc',q:'<b>Dad and I</b> watch TV. → ___ watch TV.',o:PRON,a:'we',e:'אני ו... → we.'},
-{k:2,t:'mc',q:'I ___ at home.',o:['am','is','are'],a:'am',e:'I → am.'},
-{k:2,t:'mc',q:'The buildings ___ tall.',o:['am','is','are'],a:'are',e:'רבים → are.'},
-{k:2,t:'txt',q:'השלימי: He ___ a reporter.',a:['is'],e:'he → is.'},
-{k:3,t:'mc',q:'They ___ a big house.',o:['have','has'],a:'have',e:'they → have.'},
-{k:3,t:'txt',q:'השלימי: Maya ___ a new phone.',a:['has'],e:'she → has.'},
-{k:4,t:'txt',q:'(watch) He ___ the news.',a:['watches'],e:'ch → es.'},
-{k:4,t:'txt',q:'(cry) The baby ___ .',a:['cries'],e:'y → ies.'},
-{k:4,t:'mc',q:'We ___ English at school.',o:['learn','learns'],a:'learn',e:'we → בלי s.'},
-{k:5,t:'txt',q:'Plural: a box → ___',a:['boxes'],e:'x → es.'},
-{k:5,t:'txt',q:'Plural: a man → ___',a:['men'],e:'חריג.'},
-{k:5,t:'txt',q:'Plural: a city → ___',a:['cities'],e:'עיצור + y → ies.'},
-{k:5,t:'txt',q:'Singular: leaves → a ___',a:['leaf','a leaf'],e:'ves → f.'},
-{k:6,t:'mc',q:'(לפי הסיפור) What does Noa\'s mother do every morning?',o:['reads a book','watches TV','goes to work'],a:'reads a book',e:'"my mother reads a book".'},
-{k:7,t:'txt',q:'סדרי: <b>is / my / it / dog</b>',a:['it is my dog'],e:'It is my dog.'},
-{k:7,t:'txt',q:'תרגמי: <b>אני שמחה.</b>',a:['i am happy'],e:'I am happy.'}];
-// ---------- הסברים ----------
-const LEARN=`
-<div class="card"><h2>📚 אוצר מילים – Unit 1</h2><p>לחצי על כרטיס כדי לראות את התרגום, ועל 🔊 כדי לשמוע איך אומרים את המילה.</p><div class="en" id="flash"></div>
-<div class="tip">⚠️ כאן יש רק מילים מדפי התרגול שצילמת. את הרשימה המלאה של יחידה 1 צריך ללמוד מעמוד 46 בספר.</div></div>
-<div class="card"><h2>👥 כינויי גוף – Pronouns</h2><table class="en"><tr><th>English</th><th>עברית</th><th>מתי?</th></tr>
-<tr><td>I</td><td>אני</td><td>תמיד באות גדולה</td></tr><tr><td>you</td><td>אתה/את/אתם</td><td>מי שמדברים איתו</td></tr><tr><td>he</td><td>הוא</td><td>בן, גבר (Dan, Dad)</td></tr><tr><td>she</td><td>היא</td><td>בת, אישה (Maya, Mom)</td></tr><tr><td>it</td><td>זה</td><td>חפץ או חיה (the dog, the book)</td></tr><tr><td>we</td><td>אנחנו</td><td>"אני ו..."</td></tr><tr><td>they</td><td>הם/הן</td><td>כמה אנשים או חפצים</td></tr></table></div>
-<div class="card"><h2>🟢 am / is / are</h2><table class="en"><tr><th>am</th><th>is</th><th>are</th></tr><tr><td>I</td><td>he / she / it</td><td>you / we / they</td></tr></table>
-<p class="en">I am happy. • She is my sister. • They are friends.<br>❓ Question: <b>Is</b> he happy? <b>Are</b> you ten?</p>
-<div class="tip">💡 טריק: <b>I → am</b>, <b>אחד → is</b>, <b>הרבה (או you) → are</b>.</div></div>
-<div class="card"><h2>🟣 have / has</h2><table class="en"><tr><th>have</th><th>has</th></tr><tr><td>I / you / we / they</td><td>he / she / it</td></tr></table>
-<p class="en">I have a dog. • She has a cat.</p><div class="tip">💡 has הולך עם אותם כינויים כמו is: he / she / it.</div></div>
-<div class="card"><h2>🔵 Present Simple – הווה פשוט</h2><p>מתאר דברים שקורים כל יום או באופן קבוע (every day, always). עם <b>he / she / it</b> מוסיפים לפועל סיומת:</p>
-<table class="en"><tr><th>Rule</th><th>Example</th></tr><tr><td>רוב הפעלים → <b>s</b></td><td>play → plays, read → reads</td></tr>
-<tr><td>s, ss, sh, ch, x, o → <b>es</b></td><td>watch → watches, go → goes, fix → fixes</td></tr>
-<tr><td>עיצור + y → <b>ies</b></td><td>cry → cries, fly → flies</td></tr><tr><td>תנועה (a,e,o,u) + y → <b>s</b></td><td>play → plays</td></tr></table>
-<div class="tip">💡 I / you / we / they → בלי סיומת: I play, they play.</div></div>
-<div class="card"><h2>🟠 רבים – Plural</h2><table class="en"><tr><th>Rule</th><th>Example</th></tr><tr><td>+s</td><td>bird → birds, key → keys</td></tr><tr><td>s, sh, ch, x, o → es</td><td>match → matches, potato → potatoes</td></tr>
-<tr><td>עיצור + y → ies</td><td>lady → ladies, baby → babies</td></tr><tr><td>f / fe → ves</td><td>leaf → leaves, wife → wives (but chief → chiefs)</td></tr></table>
-<p><b>מילים חריגות שצריך לזכור בעל פה:</b></p><table class="en"><tr><td>man → men</td><td>woman → women</td><td>child → children</td></tr><tr><td>tooth → teeth</td><td>foot → feet</td><td>goose → geese</td></tr><tr><td>mouse → mice</td><td>fish → fish</td><td>sheep → sheep, deer → deer</td></tr></table></div>
-<div class="card"><h2>✍️ טיפים לכתיבה</h2><ul><li>משפט מתחיל ב<b>אות גדולה</b> ונגמר ב<b>נקודה</b>.</li><li>סדר המילים: <b>מי? + am/is/are + מה?</b> → <span class="en">She is happy.</span></li><li>בודקים: האם התאמתי את am/is/are לכינוי הגוף?</li></ul></div>`;
-// ---------- מנוע ----------
-const sets=PR.concat([READ,WRITE]);
-const nav=document.getElementById('nav'),main=document.getElementById('main');
-const tabs=[['learn','📖 הסברים']].concat(T.map((t,i)=>['p'+i,t])).concat([['exam','📝 מבחן מסכם']]);
-tabs.forEach(([id,n])=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.id='b_'+id;b.onclick=()=>show(id);nav.appendChild(b)});
-function show(id){document.querySelectorAll('.sec,nav button').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');document.getElementById('b_'+id).classList.add('on');scrollTo(0,0)}
-function qhtml(q,id,n){let h=`<div class="card q" id="${id}"><p class="en"><b>${n}.</b> <span dir="auto">${q.q}</span></p><div class="en">`;
-if(q.t=='txt')h+=`<input type="text" id="${id}_a" class="${q.w?'wide':''}" autocomplete="off" autocapitalize="off" spellcheck="false">`;
-else h+=q.o.map(o=>`<label class="opt"><input type="radio" name="${id}" value="${o.replace(/"/g,'&quot;')}"> ${o}</label>`).join('');
-return h+`</div><div class="exp" id="${id}_e"></div></div>`}
-const norm=s=>String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
-function check(q,id){let ok;if(q.t=='txt'){ok=q.a.some(x=>norm(x)===norm(document.getElementById(id+'_a').value))}else{const s=document.querySelector(`input[name="${id}"]:checked`);ok=!!s&&s.value===q.a}
-const b=document.getElementById(id);b.classList.remove('ok','bad');b.classList.add(ok?'ok':'bad');const e=document.getElementById(id+'_e');e.style.display='block';
-const right=q.t=='txt'?q.a[0]:q.a;e.innerHTML=(ok?'✅ נכון! ':`❌ לא נכון. התשובה הנכונה: <b dir="ltr">${right}</b><br>`)+'<b>הסבר:</b> <span dir="auto">'+q.e+'</span>';return ok}
-function reset(id){document.querySelectorAll('#'+id+' input').forEach(i=>{i.type=='radio'?i.checked=false:i.value=''});document.querySelectorAll('#'+id+' .q').forEach(q=>q.classList.remove('ok','bad'));document.querySelectorAll('#'+id+' .exp').forEach(e=>e.style.display='none');document.getElementById(id+'_r').innerHTML=''}
-const msg=p=>p>=90?'🌟 Excellent! מצוין!':p>=75?'👍 Very good! כדאי לעבור שוב על הטעויות.':p>=55?'💪 Good try! כדאי לחזור על ההסבר ולנסות שוב.':'📖 צריך לחזק – כדאי לקרוא שוב את ההסבר ולנסות שוב.';
-let H=`<section class="sec" id="learn">${LEARN}</section>`;
-sets.forEach((qs,k)=>{H+=`<section class="sec" id="p${k}"><div class="card"><h2>${T[k]}</h2>${k==6?`<div class="story en">${STORY}</div><p>${S(STORY.replace(/<br>/g,' '))} אפשר ללחוץ כדי לשמוע את הסיפור. קראי אותו ואז עני על השאלות.</p>`:'עני על כל השאלות ולחצי "בדיקה".'}${k==7?'<br><small>לא חשוב אם כתבת באותיות גדולות או קטנות, וגם לא אם שמת נקודה בסוף. הבדיקה מתעלמת מזה.</small>':''}</div>`+qs.map((q,i)=>qhtml(q,`p${k}q${i}`,i+1)).join('')+
-`<div class="card" style="text-align:center"><button type="button" class="btn" onclick="chkP(${k})">✔️ בדיקה</button><button type="button" class="btn gray" onclick="reset('p${k}')">🔄 נסי שוב</button><div class="res" id="p${k}_r"></div></div></section>`});
-H+=`<section class="sec" id="exam"><div class="card"><h2>📝 מבחן מסכם</h2>${EX.length} שאלות מכל הנושאים. השאלה על הסיפור מתייחסת לסיפור מלשונית "הבנת הנקרא". עבדי לבד, ובסוף תקבלי ציון ופירוט לפי נושא.</div>`+EX.map((q,i)=>qhtml(q,'exq'+i,i+1)).join('')+
-`<div class="card" style="text-align:center"><button type="button" class="btn" onclick="chkE()">✔️ הגשה ובדיקה</button><button type="button" class="btn gray" onclick="reset('exam')">🔄 מבחן מחדש</button><div id="exam_r"></div></div></section>`;
-main.innerHTML=H;
-document.getElementById('flash').innerHTML=VOC.map(([en,he])=>`<span class="flash" onclick="this.classList.toggle('f');this.querySelector('b').textContent=this.classList.contains('f')?'${he}':'${en}'"><b>${en}</b></span>${S(en)}`).join('');
-show('learn');
-function chkP(k){let c=0;sets[k].forEach((q,i)=>{if(check(q,`p${k}q${i}`))c++});const p=Math.round(c/sets[k].length*100);document.getElementById(`p${k}_r`).innerHTML=`${c} / ${sets[k].length} (${p}%)<br>${msg(p)}`}
-function chkE(){const s=T.map(()=>[0,0]);let c=0;EX.forEach((q,i)=>{const ok=check(q,'exq'+i);s[q.k][1]++;if(ok){s[q.k][0]++;c++}});const p=Math.round(c/EX.length*100);
-let h=`<p class="res" style="font-size:24px">ציון: ${p}</p><p>${msg(p)}</p><table><tr><th>נושא</th><th>נכון</th><th>מצב</th></tr>`;const weak=[];
-s.forEach((v,k)=>{if(!v[1])return;const r=v[0]/v[1];if(r<1)weak.push(k);h+=`<tr><td>${T[k]}</td><td>${v[0]}/${v[1]}</td><td>${r==1?'✅ שולטת':r>=.5?'⚠️ לחזק':'❌ לחזור'}</td></tr>`});
-h+='</table>'+(weak.length?`<p><b>כדאי לחזור על:</b> ${weak.map(k=>`<a href="#" onclick="show('p${k}');return false">${T[k]}</a>`).join(' • ')}</p>`:'<p>🎉 את מוכנה למבחן!</p>');document.getElementById('exam_r').innerHTML=h}
+﻿<!doctype html><html lang="he" dir="rtl"><head><meta name="ms-sp-authoring-source" content="agent"><style data-sp-site-theme>:root{--colorBrandBackground:#0078d4;--colorBrandBackgroundHover:#106ebe;--colorBrandBackground2:#eff6fc;--colorBrandForeground1:#0078d4;--colorNeutralForeground1:#323130;--colorNeutralForeground2:#605e5c;--colorNeutralForegroundOnBrand:#ffffff;--colorNeutralBackground1:#ffffff;--colorNeutralBackground2:#faf9f8;--colorNeutralStroke1:#d2d0ce;--fontFamily:'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>English Grade 5 Trainer V2</title><style>
+:root{--b:#3759c7;--g:#168a55;--r:#d9485f;--bg:#f5f7ff;--c:#fff;--t:#172033;--m:#667085}*{box-sizing:border-box}body{margin:0;font:16px Arial,sans-serif;background:var(--bg);color:var(--t)}header{padding:18px;text-align:center;color:#fff;background:linear-gradient(120deg,#3759c7,#8357d8)}header h1{margin:0 0 6px}nav{position:sticky;top:0;z-index:3;display:flex;gap:7px;overflow:auto;padding:9px;background:#fff;box-shadow:0 2px 9px #0001}nav button,.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:700;cursor:pointer}nav button{white-space:nowrap;background:#edf0ff}nav button.on{background:var(--b);color:#fff}main{max-width:900px;margin:auto;padding:12px}.page{display:none}.page.on{display:block}.card{background:#fff;border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 2px 9px #00000012}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}.level{padding:18px;border:2px solid #e5e7eb;border-radius:14px;text-align:center;cursor:pointer}.level.sel{border-color:var(--b);background:#eef2ff}.btn{background:var(--b);color:#fff}.btn.g{background:var(--g)}.btn.gray{background:#78818f}.en{direction:ltr;text-align:left}.q{border-right:5px solid #cfd5df}.q.ok{border-color:var(--g);background:#effbf5}.q.bad{border-color:var(--r);background:#fff1f3}input[type=text]{width:min(100%,420px);padding:9px;border:1px solid #aeb6c4;border-radius:8px;font-size:17px;direction:ltr}label.opt{display:block;direction:ltr;text-align:left;border:1px solid #e1e5eb;border-radius:10px;padding:9px;margin:7px 0}.feedback{margin-top:9px;padding:9px;border-radius:9px;background:#fff8d8;display:none}.pill{display:inline-block;padding:5px 9px;border-radius:15px;background:#edf0ff;margin:3px}.stat{font-size:22px;font-weight:700}.bar{height:10px;background:#e5e7eb;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #e5e7eb;text-align:center}.word{cursor:pointer;padding:10px;border-radius:10px;background:#f2f4ff;text-align:center}.word.rev{background:#e8fff2}.word{position:relative;padding-left:42px}.speak{position:absolute;left:6px;top:50%;transform:translateY(-50%);border:0;background:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px}.small{color:var(--m);font-size:14px}.warn{background:#fff4e6;padding:10px;border-radius:10px}@media(max-width:520px){header h1{font-size:22px}.card{padding:12px}nav button{font-size:13px}}
+</style></head><body><header><h1>🇬🇧 הכנה למבחן באנגלית – כיתה ה'</h1><div>אוצר מילים • Grammar • Reading • Writing • תרגול חכם ומבחנים</div></header><nav id="nav"></nav><main id="main"></main><script>
+const WORDS=`a hundred|מאה
+a lot of|הרבה
+age|גיל
+also|גם
+always|תמיד
+April|אפריל
+at night|בלילה
+August|אוגוסט
+beautiful|יפה
+because|כי
+begin|להתחיל
+best|הכי טוב
+better|טוב יותר
+birthday|יום הולדת
+break|לשבור / הפסקה
+but|אבל
+call|לקרוא / להתקשר
+closed|סגור
+cry|לבכות
+December|דצמבר
+different|שונה
+eighteen|שמונה עשרה
+eighty|שמונים
+every|כל
+fast|מהיר
+February|פברואר
+fifteen|חמש עשרה
+fifty|חמישים
+find|למצוא
+first|ראשון
+flower|פרח
+for|עבור / בשביל
+forty|ארבעים
+fourteen|ארבע עשרה
+give|לתת
+hard|קשה / חזק
+help|לעזור
+I'm sorry|אני מצטער/ת
+idea|רעיון
+if|אם
+important|חשוב
+into|לתוך
+January|ינואר
+July|יולי
+June|יוני
+kid|ילד/ה
+learn|ללמוד
+like|לאהוב / כמו
+March|מרץ
+May|מאי
+money|כסף
+month|חודש
+more|יותר
+near|ליד / קרוב
+next|הבא
+nice|נחמד
+nineteen|תשע עשרה
+ninety|תשעים
+November|נובמבר
+now|עכשיו
+October|אוקטובר
+old|זקן / ישן
+other|אחר
+people|אנשים
+perhaps|אולי
+put|לשים
+road|כביש
+September|ספטמבר
+seventeen|שבע עשרה
+seventy|שבעים
+sick|חולה
+sixteen|שש עשרה
+sixty|שישים
+special|מיוחד
+tell a story|לספר סיפור
+the same|אותו הדבר / זהה
+their|שלהם
+theirs|שלהם
+the other|האחר
+thirteen|שלוש עשרה
+thirty|שלושים
+time|זמן
+together|ביחד
+too|גם / מדי
+twenty|עשרים
+use|להשתמש
+wait|לחכות
+wash|לשטוף
+with|עם
+year|שנה
+young|צעיר
+blanket|שמיכה
+brush|מברשת / להבריש
+chess|שחמט
+choose|לבחור
+hobby|תחביב
+information|מידע
+look for|לחפש
+pool|בריכה
+race|מרוץ
+secret|סוד
+take care of|לטפל ב-
+team|קבוצה
+toy|צעצוע
+win|לנצח`.split('\n').map(x=>x.split('|'));
+const TOPICS=['Vocabulary','Pronouns','am/is/are','have/has','Present Simple','Reading','Writing'];let level=1,current=[],mode='practice';let history=(()=>{try{return JSON.parse(window.localStorage.getItem('eng5hist')||'[]')}catch(e){return []}})();
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],shuffle=a=>[...a].sort(()=>Math.random()-.5),pick=a=>a[Math.floor(Math.random()*a.length)],norm=s=>String(s||'').toLowerCase().replace(/[.!?,’']/g,'').replace(/\s+/g,' ').trim();
+function save(){try{window.localStorage.setItem('eng5hist',JSON.stringify(history.slice(-500)))}catch(e){}}
+function nav(){const tabs=[['home','📖 הסברים'],['words','📚 מילים'],['practice','✏️ תרגול'],['exam','📝 מבחנים'],['summary','📊 הערכת עצמית']];$('#nav').innerHTML=tabs.map(x=>`<button onclick="show('${x[0]}')" id="n${x[0]}">${x[1]}</button>`).join('')}
+function show(id){$$('.page,#nav button').forEach(x=>x.classList.remove('on'));$('#'+id).classList.add('on');$('#n'+id).classList.add('on');if(id==='summary')renderSummary();scrollTo(0,0)}
+function levelBox(){return `<div class="grid">${[['קל','היכרות וזיהוי'],['בינוני','יישום במשפטים'],['מתקדם','שילוב והפקה']].map((x,i)=>`<div class="level ${level===i+1?'sel':''}" onclick="level=${i+1};this.parentNode.querySelectorAll('.level').forEach(e=>e.classList.remove('sel'));this.classList.add('sel')"><b>${x[0]}</b><br><span class="small">${x[1]}</span></div>`).join('')}</div>`}
+function distract(word){return shuffle(WORDS.filter(x=>x[0]!==word[0])).slice(0,3)}
+function qV(l){let w=pick(WORDS);if(l===1){let dir=Math.random()<.5;if(dir)return {topic:'Vocabulary',type:'mc',q:`מה פירוש <b>${w[0]}</b>?`,a:w[1],o:shuffle([w[1],...distract(w).map(x=>x[1])]),why:`${w[0]} = ${w[1]}`};return {topic:'Vocabulary',type:'mc',q:`איך אומרים באנגלית: <b>${w[1]}</b>?`,a:w[0],o:shuffle([w[0],...distract(w).map(x=>x[0])]),why:`${w[1]} = ${w[0]}`}}
+if(l===2)return {topic:'Vocabulary',type:'txt',q:`כתבי באנגלית: <b>${w[1]}</b>`,a:w[0],why:`התשובה: ${w[0]}`};return {topic:'Vocabulary',type:'txt',q:`כתבי את המילה/הביטוי באנגלית המתאים: <b>${w[1]}</b>`,a:w[0],why:`${w[0]} = ${w[1]}`}}
+const names=[['Dan','he'],['Maya','she'],['the dog','it'],['Tom and Ben','they'],['my sister and I','we'],['the books','they']];function qPron(l){let x=pick(names);return {topic:'Pronouns',type:l===1?'mc':'txt',q:`החליפי את <b>${x[0]}</b> בכינוי גוף: ___`,a:x[1],o:['I','you','he','she','it','we','they'],why:`${x[0]} → ${x[1]}`}}
+function qBe(l){let p=pick([['I','am'],['he','is'],['she','is'],['it','is'],['you','are'],['we','are'],['they','are']]);let tail=pick(['happy','at home','ten years old','ready']);return {topic:'am/is/are',type:l===1?'mc':'txt',q:`${p[0]} ___ ${tail}.`,a:p[1],o:['am','is','are'],why:`${p[0]} → ${p[1]}`}}
+function qHave(l){let p=pick([['I','have'],['you','have'],['we','have'],['they','have'],['he','has'],['she','has'],['it','has']]);return {topic:'have/has',type:l===1?'mc':'txt',q:`${p[0]} ___ ${pick(['a book','a nice idea','a toy','time'])}.`,a:p[1],o:['have','has'],why:`${p[0]} → ${p[1]}`}}
+const verbs=[['play','plays'],['read','reads'],['watch','watches'],['wash','washes'],['go','goes'],['cry','cries'],['study','studies'],['fix','fixes'],['do','does'],['learn','learns'],['help','helps']];function qPS(l){let v=pick(verbs),sub=pick(l===1?[['he',v[1]],['she',v[1]],['they',v[0]],['we',v[0]]]:[['Maya',v[1]],['my father',v[1]],['the kids',v[0]],['my friends',v[0]]]);return {topic:'Present Simple',type:l===1?'mc':'txt',q:`${sub[0]} ___ every day. (${v[0]})`,a:sub[1],o:shuffle([v[0],v[1],v[0]+'s']),why:`עם he/she/it מוסיפים s/es/ies; עם I/you/we/they משתמשים בפועל הבסיסי.`}}
+const stories=[`Lina is ten. She lives near a park. Every Saturday she plays with her team and then helps her mother. Lina has a special hobby: she likes chess.`, `Tom and his family visit the pool every August. Tom is eleven. He has a blue toy and his sister has a red blanket. They always eat together after swimming.`];function qRead(l){let s=pick(stories);let set=s.startsWith('Lina')?[['How old is Lina?','ten',['nine','ten','twelve']],['What is Lina’s hobby?','chess',['chess','swimming','reading']],['When does she play with her team?','Saturday',['Monday','Saturday','Friday']]]:[['When does the family visit the pool?','August',['April','August','December']],['What color is the blanket?','red',['red','blue','green']],['Do they eat together?','yes',['yes','no']]];let x=pick(set);return {topic:'Reading',type:l===3?'txt':'mc',story:s,q:x[0],a:x[1],o:x[2],why:`חפשי בטקסט את המידע שמוכיח את התשובה.`}}
+function qWrite(l){let x=pick(l===1?[[`I / am / happy`,`I am happy`],[`She / is / nice`,`She is nice`],[`They / are / together`,`They are together`]]:l===2?[[`he / has / a / hobby`,`He has a hobby`],[`Maya / learns / English / every day`,`Maya learns English every day`],[`we / have / a / special / idea`,`We have a special idea`]]:[[`my father / watch / TV / every night`,`My father watches TV every night`],[`she / study / English / every day`,`She studies English every day`],[`the kids / have / a / toy`,`The kids have a toy`]]);return {topic:'Writing',type:'txt',q:`סדרי/תקני למשפט נכון: <b>${x[0]}</b>`,a:x[1],why:`משפט תקין: ${x[1]}`}}
+const gens=[qV,qPron,qBe,qHave,qPS,qRead,qWrite];function generate(count,only){let pool=only?gens.filter((g,i)=>TOPICS[i]===only):gens;return Array.from({length:count},()=>pick(pool)(level))}
+function qhtml(q,i){let body=q.type==='mc'?shuffle([...new Set(q.o)]).map(o=>`<label class="opt"><input type="radio" name="q${i}" value="${o.replace(/"/g,'&quot;')}"> ${o}</label>`).join(''):`<input type="text" id="a${i}" autocomplete="off" autocapitalize="off">`;return `<div class="card q" id="q${i}">${q.story?`<div class="en" style="background:#f4f6fb;padding:10px;border-radius:9px">${q.story}</div>`:''}<p class="en"><b>${i+1}.</b> ${q.q}</p>${body}<div class="feedback" id="f${i}"></div></div>`}
+function start(kind,count=12,topic=null){mode=kind;current=generate(count,topic);let host=kind==='exam'?'exam':'practice';$('#'+host+'Body').innerHTML=current.map(qhtml).join('')+`<div class="card" style="text-align:center"><button class="btn g" onclick="grade()">✔ בדיקה וסיום</button></div>`;show(host)}
+function grade(){let right=0,run=[];current.forEach((q,i)=>{let val=q.type==='mc'?(document.querySelector(`input[name=q${i}]:checked`)||{}).value:$('#a'+i).value;let ok=norm(val)===norm(q.a);if(ok)right++;run.push({topic:q.topic,ok,level,mode,date:Date.now()});let box=$('#q'+i),f=$('#f'+i);box.classList.add(ok?'ok':'bad');f.style.display='block';f.innerHTML=(ok?'✅ נכון!':`❌ התשובה: <b class="en">${q.a}</b>`)+`<br><span class=small>${q.why}</span>`});history.push(...run);save();let pct=Math.round(100*right/current.length),weak=weakTopics(run);$('#result').innerHTML=`<div class="card"><div class=stat>ציון: ${pct}</div><p>${pct>=90?'🌟 מצוין!':pct>=75?'👍 עבודה טובה מאוד.':pct>=60?'💪 בדרך הנכונה, צריך עוד תרגול.':'📚 כדאי לחזור על הנושאים החלשים.'}</p>${weak.length?`<p><b>לחיזוק:</b> ${weak.join(' • ')}</p><button class="btn" onclick="adaptive('${weak[0]}')">בני לי תרגול חיזוק עכשיו</button>`:'<p>✅ אין נושא חלש בסבב הזה.</p>'}</div>`;$('#result').scrollIntoView({behavior:'smooth'})}
+function weakTopics(arr=history){let m={};arr.forEach(x=>{m[x.topic]??=[0,0];m[x.topic][1]++;if(x.ok)m[x.topic][0]++});return Object.entries(m).filter(([k,v])=>v[1]>=1&&v[0]/v[1]<.75).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1]).map(x=>x[0])}
+function adaptive(topic){level=Math.max(1,Math.min(3,level));start('practice',12,topic)}
+function renderSummary(){let m={};history.forEach(x=>{m[x.topic]??=[0,0];m[x.topic][1]++;if(x.ok)m[x.topic][0]++});let rows=TOPICS.map(t=>{let v=m[t]||[0,0],p=v[1]?Math.round(v[0]/v[1]*100):0;return `<tr><td>${t}</td><td>${v[1]}</td><td>${p}%</td><td><div class=bar><i style="width:${p}%"></i></div></td></tr>`}).join('');let weak=weakTopics();$('#sumBody').innerHTML=`<div class=card><h2>התקדמות מצטברת</h2><table><tr><th>נושא</th><th>שאלות</th><th>הצלחה</th><th></th></tr>${rows}</table></div><div class=card><h3>הערכה והמלצה</h3>${history.length? (weak.length?`<p>הנושאים שכדאי לחזק כרגע: <b>${weak.join(', ')}</b>.</p>${weak.slice(0,3).map(t=>`<button class="btn" onclick="adaptive('${t}')">תרגול חיזוק: ${t}</button>`).join(' ')}`:`<p>🌟 בכל הנושאים שנמדדו ההצלחה היא לפחות 75%.</p>`):'<p>עדיין אין תוצאות. התחילי תרגול או מבחן.</p>'}<p class=small>הסיכום נשמר במכשיר הזה בלבד.</p><button class="btn gray" onclick="if(confirm('למחוק את כל ההיסטוריה?')){history=[];save();renderSummary()}">איפוס היסטוריה</button></div>`}
+function speakWord(text){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;speechSynthesis.speak(u)}catch(e){}}
+function flipWord(btn){const en=btn.dataset.en,he=btn.dataset.he,rev=btn.dataset.rev==='1';btn.dataset.rev=rev?'0':'1';btn.classList.toggle('rev',!rev);btn.querySelector('.wt').textContent=rev?en:he}
+function words(){let list=shuffle(WORDS);$('#wordGrid').innerHTML=list.map(w=>{const en=w[0].replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');const he=w[1].replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');return `<div class=word data-en="${en}" data-he="${he}" data-rev="0"><span class=wt onclick="flipWord(this.parentNode)">${en}</span><button type=button class=speak title="השמעה" aria-label="השמעת ${en}" onclick="event.stopPropagation();speakWord(this.parentNode.dataset.en)">🔊</button></div>`}).join('')}
+function build(){nav();$('#main').innerHTML=`<section id=home class=page><div class=card><h2>📖 הסברים לכל חומר המבחן</h2><h3>1. Vocabulary</h3><p>יש ללמוד את פירוש המילים וגם לזהות אותן בתוך משפט. בלשונית <b>מילים</b> אפשר להפוך כל כרטיס לתרגום ולשמוע הגייה.</p><h3>2. Pronouns</h3><p class=en>I = אני • you = אתה/את/אתם • he = הוא • she = היא • it = חפץ/חיה • we = אנחנו • they = הם/הן</p><h3>3. am / is / are</h3><p class=en><b>I am</b> • <b>he/she/it is</b> • <b>you/we/they are</b></p><h3>4. have / has</h3><p class=en><b>he/she/it has</b> • <b>I/you/we/they have</b></p><h3>5. Present Simple</h3><p>עם he/she/it מוסיפים לפועל בדרך כלל <b>s</b>. אחרי s, sh, ch, x, o לרוב מוסיפים <b>es</b>. כאשר פועל מסתיים בעיצור + y, מחליפים ל-<b>ies</b>.</p><p class=en>play → plays • watch → watches • study → studies</p><h3>6. Reading</h3><p>קוראים קודם את השאלה, מסמנים מילת מפתח, חוזרים לטקסט ומחפשים משפט שמוכיח את התשובה.</p><h3>7. Writing</h3><p>סדר בסיסי: <span class=en>Subject + verb + rest.</span> בודקים אות גדולה בתחילת המשפט, התאמת הפועל לנושא וסימן פיסוק בסוף.</p></div><div class=card><h2>איך מתכוננים?</h2><p>לאחר ההסברים עוברים למילים, בוחרים רמת קושי בתרגול, ולבסוף מבצעים מבחן. המערכת שומרת את התוצאות במכשיר ובונה תרגולי חיזוק לנושאים החלשים.</p>${levelBox()}</div></section><section id=words class=page><div class=card><h2>📚 אוצר המילים המעודכן</h2><p>המילים הוחלפו לפי צילום עמוד REVIEW החדש. לחצי על המילה כדי לראות את התרגום. לחצי על 🔊 כדי לשמוע את ההגייה באנגלית.</p><button class=btn onclick=words()>ערבבי מחדש</button><div id=wordGrid class=grid></div></div></section><section id=practice class=page><div class=card><h2>✏️ תרגול</h2>${levelBox()}<p><button class=btn onclick="start('practice',12)">🔄 דף חדש לגמרי</button></p></div><div id=practiceBody></div><div id=result></div></section><section id=exam class=page><div class=card><h2>📝 מבחן לפי רמה</h2>${levelBox()}<p><button class="btn g" onclick="start('exam',20)">🔄 צור מבחן חדש</button></p></div><div id=examBody></div><div id=result></div></section><section id=summary class=page><div id=sumBody></div></section>`;words();show('home')}
+build();
 </script></body></html>
